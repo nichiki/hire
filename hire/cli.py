@@ -131,6 +131,11 @@ def run_default() -> int:
         action="store_true",
         help="Copy output to clipboard",
     )
+    parser.add_argument(
+        "-o", "--out",
+        metavar="FILE",
+        help="Write output to file",
+    )
 
     args = parser.parse_args()
     return run_ask(args)
@@ -157,6 +162,7 @@ Options:
   -m, --model MODEL  Specify model
   --json             Output in JSON format
   --clip             Copy output to clipboard
+  -o, --out FILE     Write output to file
 
 Examples:
   hire codex "Design a REST API"

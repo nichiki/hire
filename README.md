@@ -62,6 +62,9 @@ hire gemini "Summarize this" --json
 # Copy to clipboard
 hire codex "Write a function" --clip
 
+# Write to file
+hire claude "Generate a README" -o README.md
+
 # Session management
 hire sessions              # List all sessions
 hire sessions codex        # List Codex sessions only
@@ -79,6 +82,7 @@ hire delete SESSION_ID     # Delete a session
 | `-m, --model MODEL` | Specify model to use |
 | `--json` | Output in JSON format |
 | `--clip` | Copy output to clipboard |
+| `-o, --out FILE` | Write output to file |
 
 ## Configuration
 

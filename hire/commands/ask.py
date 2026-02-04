@@ -47,6 +47,7 @@ def run_ask(args: Namespace) -> int:
     model = args.model
     output_json = args.json
     copy_clip = getattr(args, "clip", False)
+    out_file = getattr(args, "out", None)
 
     # Handle case where target is actually the message (when target is omitted)
     # e.g., "hire 'message'" -> target='message', message=None
@@ -172,5 +173,14 @@ def run_ask(args: Namespace) -> int:
             print("\n(Copied to clipboard)", file=sys.stderr)
         else:
             print("\n(Failed to copy to clipboard)", file=sys.stderr)
+
+    # Write to file if requested
+    if out_file:
+        try:
+            with open(out_file, "w", encoding="utf-8") as f:
+                f.write(output_text)
+            print(f"\n(Written to {out_file})", file=sys.stderr)
+        except OSError as e:
+            print(f"\n(Failed to write to {out_file}: {e})", file=sys.stderr)
 
     return 0
