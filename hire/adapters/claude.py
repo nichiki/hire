@@ -1,6 +1,7 @@
 """Claude CLI adapter."""
 
 import json
+import shutil
 import subprocess
 from typing import Any
 
@@ -22,6 +23,10 @@ class ClaudeAdapter(AgentAdapter):
         """Build the claude command."""
         config = get_adapter_config("claude")
         command = config.get("command", "claude")
+        # Resolve full path for Windows .cmd/.bat files
+        resolved = shutil.which(command)
+        if resolved:
+            command = resolved
         args = config.get("args", [])
 
         cmd = [command, "-p", message, "--output-format", "json"]
@@ -48,6 +53,7 @@ class ClaudeAdapter(AgentAdapter):
             cmd,
             capture_output=True,
             text=True,
+            encoding="utf-8",
         )
 
         if result.returncode != 0:

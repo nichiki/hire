@@ -1,6 +1,7 @@
 """Codex CLI adapter."""
 
 import json
+import shutil
 import subprocess
 from typing import Any
 
@@ -22,6 +23,10 @@ class CodexAdapter(AgentAdapter):
         """Build the codex command."""
         config = get_adapter_config("codex")
         command = config.get("command", "codex")
+        # Resolve full path for Windows .cmd/.bat files
+        resolved = shutil.which(command)
+        if resolved:
+            command = resolved
         args = config.get("args", [])
 
         if session_id:
@@ -51,6 +56,7 @@ class CodexAdapter(AgentAdapter):
             cmd,
             capture_output=True,
             text=True,
+            encoding="utf-8",
         )
 
         if result.returncode != 0:

@@ -12,6 +12,11 @@ SUBCOMMANDS = {"sessions", "show", "delete", "doctor", "help", "--help", "-h", "
 
 def main() -> int:
     """Main entry point."""
+    # Ensure UTF-8 output on Windows
+    if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
     # Check if first arg is a subcommand, if not, treat as default (hire) action
     if len(sys.argv) > 1 and sys.argv[1] not in SUBCOMMANDS:
         # Default action: hire an agent

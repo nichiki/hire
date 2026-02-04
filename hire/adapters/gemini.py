@@ -1,6 +1,7 @@
 """Gemini CLI adapter."""
 
 import json
+import shutil
 import subprocess
 from typing import Any
 
@@ -22,6 +23,10 @@ class GeminiAdapter(AgentAdapter):
         """Build the gemini command."""
         config = get_adapter_config("gemini")
         command = config.get("command", "gemini")
+        # Resolve full path for Windows .cmd/.bat files
+        resolved = shutil.which(command)
+        if resolved:
+            command = resolved
         args = config.get("args", [])
 
         # gemini -p "message" -o json -y
@@ -50,6 +55,7 @@ class GeminiAdapter(AgentAdapter):
             cmd,
             capture_output=True,
             text=True,
+            encoding="utf-8",
         )
 
         if result.returncode != 0:
