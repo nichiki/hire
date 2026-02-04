@@ -14,13 +14,32 @@ from ..session import (
 )
 
 
+def read_stdin() -> str | None:
+    """Read from stdin if available (pipe/redirect)."""
+    if sys.stdin.isatty():
+        return None
+    content = sys.stdin.read()
+    return content.strip() if content else None
+
+
+def build_message(message: str | None, stdin: str | None) -> str | None:
+    """Build the final message from args and stdin."""
+    if message and stdin:
+        return f"{message}\n\n--- stdin ---\n{stdin}"
+    elif stdin:
+        return stdin
+    else:
+        return message
+
+
 VALID_TARGETS = {"claude", "codex", "gemini"}
 
 
 def run_ask(args: Namespace) -> int:
     """Run the ask command."""
     target = args.target
-    message = args.message
+    arg_message = args.message
+    stdin_content = read_stdin()
     continue_session = getattr(args, "continue_session", False)
     session_id = args.session
     name = args.name
@@ -28,10 +47,13 @@ def run_ask(args: Namespace) -> int:
     output_json = args.json
 
     # Handle case where target is actually the message (when target is omitted)
-    # e.g., "delegate 'message'" -> target='message', message=None
-    if target and target not in VALID_TARGETS and message is None:
-        message = target
+    # e.g., "hire 'message'" -> target='message', message=None
+    if target and target not in VALID_TARGETS and arg_message is None:
+        arg_message = target
         target = None
+
+    # Build final message from args and stdin
+    message = build_message(arg_message, stdin_content)
 
     # Load config for defaults
     from ..config import load_config

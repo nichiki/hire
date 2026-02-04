@@ -47,6 +47,11 @@ hire -s SESSION_ID "Follow up question"
 hire -n my-project codex "Start designing the architecture"
 hire -s my-project "What about the database schema?"
 
+# Pipe input
+cat main.py | hire codex "Review this code"
+git diff | hire claude "Explain these changes"
+echo "What is 2+2?" | hire gemini
+
 # Output as JSON
 hire gemini "Summarize this" --json
 

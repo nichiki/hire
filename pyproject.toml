@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "CLI to orchestrate AI agents (Claude, Codex, Gemini)"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 authors = [
     { name = "nichiki" }
 ]
@@ -20,6 +20,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -38,9 +39,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nichiki/hire"
-Repository = "https://github.com/nichiki/hire"
-Issues = "https://github.com/nichiki/hire/issues"
+Homepage = "https://github.com/nichiki/hire-ai"
+Repository = "https://github.com/nichiki/hire-ai"
+Issues = "https://github.com/nichiki/hire-ai/issues"
 
 [project.scripts]
 hire = "hire.cli:main"
@@ -49,14 +50,14 @@ hire = "hire.cli:main"
 packages = ["hire"]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py310"
 line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.10"
 strict = false
 warn_return_any = true
 warn_unused_configs = true
