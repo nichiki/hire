@@ -1,6 +1,14 @@
-# hire
+# hire-ai
 
 CLI to orchestrate AI agents (Claude, Codex, Gemini).
+
+> **⚠️ Warning**: By default, all agents run in **auto-approve mode**:
+> - Claude Code: `--dangerously-skip-permissions`
+> - Codex: `--full-auto`
+> - Gemini CLI: `-y`
+>
+> This means agents can execute commands and modify files without confirmation.
+> You can customize this in `~/.config/hire/config.json`.
 
 ## Installation
 
