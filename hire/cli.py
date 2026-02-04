@@ -4,10 +4,10 @@ import argparse
 import sys
 
 from . import __version__
-from .commands import run_ask, run_delete, run_sessions, run_show
+from .commands import run_ask, run_delete, run_doctor, run_sessions, run_show
 
 
-SUBCOMMANDS = {"sessions", "show", "delete", "help", "--help", "-h", "--version"}
+SUBCOMMANDS = {"sessions", "show", "delete", "doctor", "help", "--help", "-h", "--version"}
 
 
 def main() -> int:
@@ -68,6 +68,9 @@ def main() -> int:
         help="Delete without confirmation",
     )
 
+    # doctor command
+    subparsers.add_parser("doctor", help="Check environment and agent availability")
+
     args = parser.parse_args()
 
     if args.command is None:
@@ -81,6 +84,8 @@ def main() -> int:
         return run_show(args)
     elif args.command == "delete":
         return run_delete(args)
+    elif args.command == "doctor":
+        return run_doctor(args)
     else:
         print_usage()
         return 1
@@ -151,6 +156,7 @@ Usage:
   hire sessions [target]       List sessions
   hire show <name-or-id>       Show session details
   hire delete <name-or-id>     Delete a session
+  hire doctor                  Check environment
 
 Targets:
   claude, codex, gemini
