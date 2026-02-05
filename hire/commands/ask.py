@@ -62,9 +62,6 @@ def run_ask(args: Namespace) -> int:
     from ..config import load_config
     config = load_config()
 
-    if not target:
-        target = config.get("defaults", {}).get("agent")
-
     # Determine which session to use
     cli_session_id = None
     existing_session = None
@@ -78,7 +75,7 @@ def run_ask(args: Namespace) -> int:
             return 1
         if existing_session:
             cli_session_id = existing_session.get("cli_session_id")
-            # If target not specified, get it from session
+            # When resuming a session, always use the session's agent
             if not target:
                 target = existing_session.get("agent")
         else:
@@ -113,6 +110,10 @@ def run_ask(args: Namespace) -> int:
             cli_session_id = existing_session.get("cli_session_id")
         else:
             print(f"Warning: No previous session found{' for ' + target if target else ''}, starting new session", file=sys.stderr)
+
+    # Fall back to default agent if not specified
+    if not target:
+        target = config.get("defaults", {}).get("agent")
 
     # Validate target
     if not target:
