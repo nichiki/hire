@@ -138,9 +138,16 @@ def run_ask(args: Namespace) -> int:
     if target == "grok" and existing_session:
         history = existing_session.get("messages", [])
 
+    # For Grok, parse @filepath references and extract files
+    file_paths = None
+    if target == "grok":
+        from ..files import extract_file_refs
+        message, file_paths = extract_file_refs(message)
+
     # Call the agent
     if target == "grok":
-        result = adapter.ask(message, session_id=cli_session_id, model=model, history=history)
+        result = adapter.ask(message, session_id=cli_session_id, model=model,
+                             history=history, files=file_paths or None)
     else:
         result = adapter.ask(message, session_id=cli_session_id, model=model)
 
