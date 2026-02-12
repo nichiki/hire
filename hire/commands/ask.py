@@ -33,7 +33,7 @@ def build_message(message: str | None, stdin: str | None) -> str | None:
         return message
 
 
-VALID_TARGETS = {"claude", "codex", "gemini"}
+VALID_TARGETS = {"claude", "codex", "gemini", "grok"}
 
 
 def run_ask(args: Namespace) -> int:
@@ -117,7 +117,7 @@ def run_ask(args: Namespace) -> int:
 
     # Validate target
     if not target:
-        print("Error: Target agent is required (claude, codex, or gemini)", file=sys.stderr)
+        print("Error: Target agent is required (claude, codex, gemini, or grok)", file=sys.stderr)
         return 1
 
     # Validate message
@@ -133,8 +133,16 @@ def run_ask(args: Namespace) -> int:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
+    # Load conversation history for Grok sessions
+    history = None
+    if target == "grok" and existing_session:
+        history = existing_session.get("messages", [])
+
     # Call the agent
-    result = adapter.ask(message, session_id=cli_session_id, model=model)
+    if target == "grok":
+        result = adapter.ask(message, session_id=cli_session_id, model=model, history=history)
+    else:
+        result = adapter.ask(message, session_id=cli_session_id, model=model)
 
     if result.get("error"):
         print(f"Error: {result['error']}", file=sys.stderr)
@@ -145,12 +153,21 @@ def run_ask(args: Namespace) -> int:
     # Get the new session ID from the response
     new_cli_session_id = result.get("session_id")
 
+    # Build updated message history for Grok
+    if target == "grok":
+        updated_messages = list(history) if history else []
+        updated_messages.append({"role": "user", "content": message})
+        if result.get("response"):
+            updated_messages.append({"role": "assistant", "content": result["response"]})
+
     # Save or update session
     if existing_session and cli_session_id:
         # Update existing session
         existing_session["cli_session_id"] = new_cli_session_id or cli_session_id
         if name:
             existing_session["name"] = name
+        if target == "grok":
+            existing_session["messages"] = updated_messages
         save_session(existing_session)
         session = existing_session
     else:
@@ -160,6 +177,9 @@ def run_ask(args: Namespace) -> int:
             cli_session_id=new_cli_session_id or "unknown",
             name=name,
         )
+        if target == "grok":
+            session["messages"] = updated_messages
+            save_session(session)
 
     # Output
     if output_json:

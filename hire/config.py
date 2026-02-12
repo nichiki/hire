@@ -23,6 +23,9 @@ DEFAULT_CONFIG = {
         "gemini": {
             "command": "gemini",
             "args": ["-y"]
+        },
+        "grok": {
+            "model": "grok-4-latest"
         }
     },
     "defaults": {
@@ -31,15 +34,26 @@ DEFAULT_CONFIG = {
 }
 
 
+def _deep_merge(base: dict, override: dict) -> dict:
+    """Deep merge override into base. Override values take priority."""
+    result = copy.deepcopy(base)
+    for key, value in override.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = _deep_merge(result[key], value)
+        else:
+            result[key] = copy.deepcopy(value)
+    return result
+
+
 def load_config() -> dict[str, Any]:
-    """Load configuration from file, or return defaults."""
+    """Load configuration from file, merged with defaults."""
     config_path = get_config_path()
     if config_path.exists():
         try:
             with open(config_path, encoding="utf-8") as f:
-                return json.load(f)
+                user_config = json.load(f)
+            return _deep_merge(DEFAULT_CONFIG, user_config)
         except (OSError, json.JSONDecodeError):
-            # Fall back to defaults on error
             pass
     return copy.deepcopy(DEFAULT_CONFIG)
 

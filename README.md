@@ -1,8 +1,8 @@
 # hire-ai
 
-CLI to orchestrate AI agents (Claude, Codex, Gemini).
+CLI to orchestrate AI agents (Claude, Codex, Gemini, Grok).
 
-> **⚠️ Warning**: By default, all agents run in **auto-approve mode**:
+> **⚠️ Warning**: By default, CLI agents run in **auto-approve mode**:
 > - Claude Code: `--dangerously-skip-permissions`
 > - Codex: `--full-auto`
 > - Gemini CLI: `-y`
@@ -25,11 +25,12 @@ brew install nichiki/tap/hire-ai
 
 ## Prerequisites
 
-You need at least one of the following CLI tools installed:
+You need at least one of the following:
 
-- [Claude Code](https://claude.ai/claude-code)
-- [Codex](https://github.com/openai/codex)
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- [Claude Code](https://claude.ai/claude-code) (CLI)
+- [Codex](https://github.com/openai/codex) (CLI)
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) (CLI)
+- [Grok](https://console.x.ai/) (API key only, no CLI needed)
 
 ## Usage
 
@@ -38,6 +39,7 @@ You need at least one of the following CLI tools installed:
 hire codex "Design a REST API for a todo app"
 hire gemini "Research the latest React 19 features"
 hire claude "Review this code for security issues"
+hire grok "Analyze this codebase"
 
 # Continue a session
 hire -c codex "Tell me more about the authentication"
@@ -52,7 +54,7 @@ cat main.py | hire codex "Review this code"
 git diff | hire claude "Explain these changes"
 echo "What is 2+2?" | hire gemini
 
-# Attach files (using @filepath - agent feature)
+# Attach files (using @filepath - CLI agent feature, not available for Grok)
 hire claude "Review @src/main.py for security issues"
 hire codex "Explain @package.json and @tsconfig.json"
 
@@ -67,7 +69,7 @@ hire claude "Generate a README" -o README.md
 
 # Session management
 hire sessions              # List all sessions
-hire sessions codex        # List Codex sessions only
+hire sessions codex        # List sessions by agent
 hire show SESSION_ID       # Show session details
 hire delete SESSION_ID     # Delete a session
 hire delete --all          # Delete all sessions
@@ -106,6 +108,10 @@ Config is stored at `~/.config/hire/config.json`:
     "gemini": {
       "command": "gemini",
       "args": ["-y"]
+    },
+    "grok": {
+      "model": "grok-4-latest",
+      "api_key": "xai-..."
     }
   },
   "defaults": {

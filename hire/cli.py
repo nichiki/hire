@@ -25,7 +25,7 @@ def main() -> int:
     # Subcommand mode
     parser = argparse.ArgumentParser(
         prog="hire",
-        description="Hire AI agents to do tasks (Claude, Codex, Gemini)",
+        description="Hire AI agents to do tasks (Claude, Codex, Gemini, Grok)",
     )
     parser.add_argument(
         "--version",
@@ -40,7 +40,7 @@ def main() -> int:
     sessions_parser.add_argument(
         "target",
         nargs="?",
-        choices=["claude", "codex", "gemini"],
+        choices=["claude", "codex", "gemini", "grok"],
         help="Filter by agent",
     )
     sessions_parser.add_argument(
@@ -112,7 +112,7 @@ def run_default() -> int:
     parser.add_argument(
         "target",
         nargs="?",
-        help="Target agent: claude, codex, or gemini",
+        help="Target agent: claude, codex, gemini, or grok",
     )
     parser.add_argument(
         "message",
@@ -159,7 +159,7 @@ def run_default() -> int:
 
 def print_usage():
     """Print usage information."""
-    print("""hire - Hire AI agents to do tasks (Claude, Codex, Gemini)
+    print("""hire - Hire AI agents to do tasks (Claude, Codex, Gemini, Grok)
 
 Usage:
   hire <target> <message>      Hire an agent to do a task
@@ -171,7 +171,7 @@ Usage:
   hire doctor                  Check environment
 
 Targets:
-  claude, codex, gemini
+  claude, codex, gemini, grok
 
 Options:
   -c, --continue     Continue the latest session
