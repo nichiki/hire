@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hire-ai"
-version = "0.1.7"
+version = "0.1.8"
 description = "CLI to orchestrate AI agents (Claude, Codex, Gemini, Grok)"
 readme = "README.md"
 license = "MIT"
